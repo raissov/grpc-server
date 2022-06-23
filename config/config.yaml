@@ -1,0 +1,12 @@
+db:
+  host: postgres-server
+  port: 5433
+  user: postgres
+  password: postgres
+  db_name: postgres
+  timeout: 5
+server:
+  port: 3002
+  shutdown_timeout: 60
+grpc-server:
+  port: 50051

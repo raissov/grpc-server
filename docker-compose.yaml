@@ -1,0 +1,37 @@
+version: '3'
+services:
+  postgres:
+    container_name: postgres-server
+    image: postgres:11-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    volumes:
+      - postgres-vol:/var/lib/postgresql/data
+      - ./postgres-back/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5433:5433"
+    command: -p 5433
+    networks:
+      - auth-serice_users-auth
+  myapp:
+    container_name: server-receiver
+    ports:
+      - 3002:3002
+      - 50051:50051
+    build:
+      context: ./
+      dockerfile: build/Dockerfile
+    restart: always
+    networks:
+      - auth-serice_users-auth
+    volumes:
+      - ./config/config.yaml:/app/config.yaml:ro
+    environment:
+      - APP_MODE=dev
+networks:
+  auth-serice_users-auth:
+    external: true
+volumes:
+  postgres-vol:
